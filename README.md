@@ -11,11 +11,17 @@
 [Python Infer Client](https://github.com/rabiloo/python-infer-client) is a python inference client library. It provides one interface to interact with many types of inference client as onnxruntime, tritonclient...
 
 ## Install
-
+With using the tritonclient client, only supported with GRPC
 ```
-$ pip install infer-client
+$ pip install infer-client[tritonclient]
 ```
 
+With using the onnxruntime client, both CPU and GPU are supported
+```
+$ pip install infer-client[onnxruntime]
+or
+$ pip install infer-client[onnxruntime-gpu]
+```
 ## Usage
 
 ```
