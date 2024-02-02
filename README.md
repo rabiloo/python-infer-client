@@ -1,14 +1,14 @@
 # Python Infer Client
 
-[![Testing](https://github.com/rabiloo/python-infer-client/actions/workflows/test.yml/badge.svg)](https://github.com/rabiloo/python-flysystem/actions/workflows/test.yml)
-[![Latest Version](https://img.shields.io/pypi/v/flysystem.svg)](https://pypi.org/project/flysystem)
-[![Downloads](https://img.shields.io/pypi/dm/flysystem.svg)](https://pypi.org/project/flysystem)
-[![Pypi Status](https://img.shields.io/pypi/status/flysystem.svg)](https://pypi.org/project/flysystem)
-[![Python Versions](https://img.shields.io/pypi/pyversions/flysystem.svg)](https://pypi.org/project/flysystem)
+[![Testing](https://github.com/rabiloo/python-infer-client/actions/workflows/test.yml/badge.svg)](https://github.com/rabiloo/python-infer-client/actions/workflows/test.yml)
+[![Latest Version](https://img.shields.io/pypi/v/infer-client.svg)](https://pypi.org/project/infer-client)
+[![Downloads](https://img.shields.io/pypi/dm/infer-client.svg)](https://pypi.org/project/infer-client)
+[![Pypi Status](https://img.shields.io/pypi/status/infer-client.svg)](https://pypi.org/project/infer-client)
+[![Python Versions](https://img.shields.io/pypi/pyversions/infer-client.svg)](https://pypi.org/project/infer-client)
 
 ## About Python Infer Client
 
-[Python Infer Client](https://github.com/rabiloo/ai_infer_client) is a python inference client library. It provides one interface to interact with many types of filesystems. When you use Flysystem, you're not only protected from vendor lock-in, you'll also have a consistent experience for which ever storage is right for you.
+[Python Infer Client](https://github.com/rabiloo/python-infer-client) is a python inference client library. It provides one interface to interact with many types of inference client as onnxruntime, tritonclient...
 
 ## Install
 
@@ -19,14 +19,16 @@ $ pip install infer-client
 ## Usage
 
 ```
-from flysystem.adapters.local import LocalFilesystemAdapter
-from flysystem.filesystem import Filesystem
+import numpy as np
+
+from infer_client.adapters.onnx import OnnxInferenceAdapter
+from infer_client.inference import Inference
 
 
-adapter = LocalFilesystemAdapter(".")
-filesystem = Filesystem(adapter)
+adapter = OnnxInferenceAdapter(model_name="resources/test_classify", version="1", limit_mem_gpu=-1)
+infer_client_obj = Inference(adapter)
 
-filesystem.file_exists("/tmp/hello.txt")
+res = infer_client_obj.inference({"input": np.random.rand(1, 3, 224, 224)}, ["output"])
 ```
 
 ## Changelog
