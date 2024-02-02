@@ -1,4 +1,5 @@
-import os
+from os import getenv
+from os.path import dirname, join
 
 import cv2
 import numpy as np
@@ -8,9 +9,11 @@ from infer_client.adapters.onnx import OnnxInferenceAdapter
 from infer_client.adapters.triton import TritonInferenceAdapter
 
 IMG_SIZE = 224
-infer_onnx_obj = OnnxInferenceAdapter(model_name="resources/test_classify", version="1", limit_mem_gpu=-1)
+infer_onnx_obj = OnnxInferenceAdapter(
+    model_name=join(dirname(__file__), "resources/test_classify"), version="1", limit_mem_gpu=-1
+)
 infer_triton_obj = TritonInferenceAdapter(
-    triton_server=os.getenv("TRITON_SERVER"), model_name="test_classify", version="1"
+    triton_server=getenv("TRITON_SERVER"), model_name="test_classify", version="1"
 )
 
 
@@ -28,8 +31,8 @@ def postprocess(output):
 @pytest.mark.parametrize(
     "path,expected",
     (
-        ("resources/dog.jpg", 264),
-        ("resources/cat.jpg", 285),
+        (join(dirname(__file__), "resources/dog.jpg"), 264),
+        (join(dirname(__file__), "resources/cat.jpg"), 285),
     ),
 )
 def test_inference(path: str, expected: str):
