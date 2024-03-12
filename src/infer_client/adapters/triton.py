@@ -18,6 +18,7 @@ class TritonInferenceAdapter(InferenceAdapter):
         model_name: str,
         version: str = "1",
         client_timeout: int = 30,
+        ssl: bool = False,
         options: Dict[str, Any] = None,
     ) -> None:
         if options is None:
@@ -26,7 +27,7 @@ class TritonInferenceAdapter(InferenceAdapter):
                 ("grpc.max_receive_message_length", 512 * 1024 * 1024),
             ]
 
-        self.grpc_client = InferenceServerClientCustom(url=triton_server, channel_args=options)
+        self.grpc_client = InferenceServerClientCustom(url=triton_server, ssl=ssl, channel_args=options)
         if not (
             self.grpc_client.is_server_live(client_timeout=client_timeout)
             and self.grpc_client.is_server_ready(client_timeout=client_timeout)

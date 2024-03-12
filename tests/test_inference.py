@@ -13,7 +13,7 @@ infer_onnx_obj = OnnxInferenceAdapter(
     model_name=join(dirname(__file__), "resources/test_classify"), version="1", limit_mem_gpu=-1
 )
 infer_triton_obj = TritonInferenceAdapter(
-    triton_server=getenv("TRITON_SERVER"), model_name="test_classify", version="1"
+    triton_server=getenv("TRITON_SERVER"), model_name="test_classify", version="1", ssl=True
 )
 
 
