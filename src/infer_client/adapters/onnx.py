@@ -9,7 +9,7 @@ from ..adapters import InferenceAdapter
 
 
 class OnnxInferenceAdapter(InferenceAdapter):
-    def __init__(self, model_name: str, version: str = "1", limit_mem_gpu: int = -1, logger_level: int = 3) -> None:
+    def __init__(self, model_name: str, version: str = "1", limit_mem_gpu: int = -1, logger_level: int = 3, use_tf32: bool = True) -> None:
         onnxruntime.set_default_logger_severity(logger_level)
         providers = ["CPUExecutionProvider"]
         if onnxruntime.get_available_providers() == providers or limit_mem_gpu <= 0:
@@ -27,6 +27,7 @@ class OnnxInferenceAdapter(InferenceAdapter):
                         "gpu_mem_limit": limit_mem_gpu * 1024 * 1024 * 1024,
                         "cudnn_conv_algo_search": "EXHAUSTIVE",
                         "do_copy_in_default_stream": True,
+                        "use_tf32": use_tf32,
                     },
                 ),
                 "CPUExecutionProvider",
