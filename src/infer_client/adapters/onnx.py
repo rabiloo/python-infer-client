@@ -16,6 +16,7 @@ class OnnxInferenceAdapter(InferenceAdapter):
         limit_mem_gpu: int = -1,
         logger_level: int = 3,
         use_tf32: bool = True,
+        enable_mem_pattern: bool = True,
     ) -> None:
         onnxruntime.set_default_logger_severity(logger_level)
         providers = ["CPUExecutionProvider"]
@@ -43,7 +44,10 @@ class OnnxInferenceAdapter(InferenceAdapter):
             sys.exit("Not Support Device")
         if not model_name.endswith("model.onnx"):
             model_name = join(model_name, version, "model.onnx")
-        self.ort_session = onnxruntime.InferenceSession(model_name, providers=providers)
+
+        sess_options = onnxruntime.SessionOptions()
+        sess_options.enable_mem_pattern = enable_mem_pattern
+        self.ort_session = onnxruntime.InferenceSession(model_name, sess_options, providers=providers)
 
     def health(self) -> bool:
         if self.ort_session is None:
