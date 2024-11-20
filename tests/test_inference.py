@@ -49,3 +49,27 @@ def test_inference(path: str, expected: str):
     pred = res_onnx[0]
     output = postprocess(pred)
     assert output.item() == expected
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "path,expected",
+    (
+        (join(dirname(__file__), "resources/dog.jpg"), 264),
+        (join(dirname(__file__), "resources/cat.jpg"), 285),
+    ),
+)
+async def test_async_inference(path: str, expected: str):
+    img = cv2.imread(path)
+    preprocessed_img = preprocess(img, (IMG_SIZE, IMG_SIZE))
+
+    res_onnx = await infer_onnx_obj.inference_async({"x": preprocessed_img}, ["400"])
+    res_triton = infer_triton_obj.inference({"x": preprocessed_img}, ["400"])
+
+    assert np.allclose(res_onnx, res_triton, rtol=1.0e-4)
+
+    if not res_onnx:
+        return None
+    pred = res_onnx[0]
+    output = postprocess(pred)
+    assert output.item() == expected

@@ -1,5 +1,7 @@
+import asyncio
 import sys
 
+from concurrent.futures import Executor
 from os.path import join
 from typing import Any, Dict, List
 
@@ -17,6 +19,7 @@ class OnnxInferenceAdapter(InferenceAdapter):
         logger_level: int = 3,
         use_tf32: bool = True,
         enable_mem_pattern: bool = True,
+        executor: Executor = None,
     ) -> None:
         onnxruntime.set_default_logger_severity(logger_level)
         providers = ["CPUExecutionProvider"]
@@ -48,6 +51,7 @@ class OnnxInferenceAdapter(InferenceAdapter):
         sess_options = onnxruntime.SessionOptions()
         sess_options.enable_mem_pattern = enable_mem_pattern
         self.ort_session = onnxruntime.InferenceSession(model_name, sess_options, providers=providers)
+        self.executor = executor
 
     def health(self) -> bool:
         if self.ort_session is None:
@@ -69,3 +73,8 @@ class OnnxInferenceAdapter(InferenceAdapter):
         del io_binding
 
         return ort_outs
+
+    async def inference_async(self, ort_inputs: Dict[str, Any], ort_out_names: List[str]) -> List[Any]:
+        return await asyncio.get_running_loop().run_in_executor(
+            self.executor, self.inference, ort_inputs, ort_out_names
+        )

@@ -69,3 +69,6 @@ class TritonInferenceAdapter(InferenceAdapter):
         if len(ort_out_names) == 1:
             return [res.as_numpy(ort_out_names[0])]
         return [res.as_numpy(out) for out in ort_out_names]
+
+    async def inference_async(self, ort_inputs: Dict[str, Any], ort_out_names: List[str]) -> List[Any]:
+        raise NotImplementedError

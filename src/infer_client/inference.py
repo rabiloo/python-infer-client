@@ -22,3 +22,6 @@ class Inference(metaclass=ABCMeta):
 
     def inference(self, ort_inputs, ort_out_names):
         return self.adapter.inference(ort_inputs, ort_out_names)
+
+    async def inference_async(self, ort_inputs, ort_out_names):
+        return await self.adapter.inference_async(ort_inputs, ort_out_names)
