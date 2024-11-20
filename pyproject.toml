@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "infer-client"
-version = "0.0.4"
+version = "0.1.0"
 description = "Abstraction for AI Inference Client"
 readme = "README.md"
 keywords = [ "infer-client", "onnxruntime", "onnxruntime-gpu", "tritonclient" ]
